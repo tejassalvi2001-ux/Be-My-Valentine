@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Be My Valentine</title>
+
+  <style>
+  body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  transition: background-image 3s ease-in-out;
+  background-image: url(https://img.freepik.com/premium-photo/valentines-day-background-hearts-background-image-valentine-background-images-hd_913266-50369.jpg);
+  background-size: cover;
+  background-position: center;
+  padding: 16px;
+}
+
+/* Responsive heading */
+h1 {
+  color: red;
+  font-size: clamp(1.8rem, 5vw, 2.5rem);
+  margin-bottom: 30px;
+}
+
+/* Buttons */
+button {
+  padding: clamp(10px, 3vw, 15px) clamp(20px, 5vw, 30px);
+  font-size: clamp(1rem, 3vw, 1.2rem);
+  margin: 15px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+#yes {
+  background-color: red;
+  color: white;
+}
+
+#no {
+  background-color: green;
+  color: white;
+  position: absolute;
+}
+
+.btn-container {
+  position: relative;
+  width: 100%;
+  max-width: 350px;
+  height: 120px;       /* MUST have height so NO can move inside */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+#yes {
+  z-index: 2;          /* YES stays on top */
+}
+
+#no {
+  position: absolute;   /* moves inside container */
+  z-index: 1;
+  left: 0;              /* initial position so it’s visible */
+  top: 0;
+}
+
+
+
+
+
+/* ❤️ TEXT ANIMATION */
+.love-pop {
+  opacity: 0;
+  animation: lovePop 1.4s ease-out forwards;
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.delay-1 {
+  animation-delay: 3.8s;
+  font-size: clamp(1.6rem, 4.5vw, 2.5rem);
+  font-family: Cambria, Georgia, serif;
+}
+
+@keyframes lovePop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 🌸 Highlight (responsive, same look) */
+.highlight-bg {
+  background: rgba(255, 105, 180, 0.8);
+  padding: clamp(10px, 2.5vw, 14px) clamp(18px, 4vw, 28px);
+  border-radius: clamp(14px, 3vw, 22px);
+  box-shadow: 0 clamp(6px, 2vw, 10px) clamp(18px, 4vw, 28px)
+    rgba(255, 20, 147, 0.6);
+  display: inline-block;
+}
+
+/* 💖 Floating hearts */
+.heart {
+  position: fixed;
+  bottom: -20px;
+  font-size: clamp(18px, 4vw, 26px);
+  animation: floatUp 4s linear infinite;
+  opacity: 0.8;
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) scale(1.5);
+    opacity: 0;
+  }
+}
+
+  </style>
+</head>
+
+<body>
+
+  <h1>Will you be my Valentine?</h1>
+<div class="btn-container">
+  <button id="yes">Yes</button>
+  <button id="no">No</button>
+</div>
+
+
+  <script>
+   const noBtn = document.getElementById('no');
+const yesBtn = document.getElementById('yes');
+const container = document.querySelector('.btn-container');
+
+noBtn.addEventListener('mouseover', () => {
+  let x, y, overlap;
+  const yesRect = yesBtn.getBoundingClientRect();
+
+  do {
+    x = Math.random() * (container.clientWidth - noBtn.clientWidth);
+    y = Math.random() * (container.clientHeight - noBtn.clientHeight);
+
+    const noRect = {
+      left: x,
+      top: y,
+      right: x + noBtn.clientWidth,
+      bottom: y + noBtn.clientHeight
+    };
+
+    // Ensure NO does not overlap YES
+    overlap = !(noRect.right < yesRect.left ||
+                noRect.left > yesRect.right ||
+                noRect.bottom < yesRect.top ||
+                noRect.top > yesRect.bottom);
+
+  } while (overlap);
+
+  noBtn.style.left = x + 'px';
+  noBtn.style.top = y + 'px';
+});
+
+
+
+    // YES click
+    yesBtn.addEventListener('click', () => {
+      document.body.innerHTML = `
+ <h1 class="love-pop highlight-bg" style="color:white;">
+  That's the best decision!
+</h1>
+
+<p class="love-pop delay-1" style="font-size:1.5em; color:red;">
+   love you ARPITA ❤️
+</p>
+
+      `;
+
+      document.body.style.backgroundImage = "url('love2.jpg')";
+      document.body.style.backgroundRepeat = "no-repeat";
+      document.body.style.backgroundPosition = "center";
+
+      // Responsive background
+      if (window.innerWidth > 768) {
+        document.body.style.backgroundSize = "contain";
+        document.body.style.backgroundColor = "pink";
+      } else {
+        document.body.style.backgroundSize = "cover";
+      }
+
+      // Start hearts
+      setInterval(createHeart, 350);
+    });
+
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.innerHTML = '💖';
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.animationDuration = (3 + Math.random() * 2) + 's';
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 5000);
+    }
+  </script>
+
+</body>
+</html>
